@@ -72,32 +72,173 @@ final digunakan untuk mendefinisikan nilai yang tetap setelah diinisialisasi tet
 
 Berikut adalah cara saya mengimplementasikan Checklist-checklist diatas:
 
-• Membuat program Flutter dengan tema E-Commerce
 
-Saya membuat aplikasi Flutter baru dengan judul "Toko Sepatu Muslim" menggunakan widget MaterialApp sebagai root widget aplikasi. Tema dasar aplikasi ini ditentukan dengan ThemeData, yang memungkinkan kustomisasi warna dan elemen visual lainnya. Tema ini menggunakan skema warna berbasis seedColor untuk menciptakan tampilan khas dan konsisten.
+```dart
+import 'package:flutter/material.dart'; // Mengimpor paket material untuk menggunakan widget Material Design
+```
+Mengimpor pustaka `material.dart` dari Flutter, yang menyediakan widget dan tema bawaan untuk Material Design.
 
-• Membuat tiga tombol dengan ikon dan teks
+```dart
+void main() {
+  runApp(const MyApp()); // Menjalankan aplikasi dengan widget MyApp
+}
+```
+Fungsi `main` sebagai titik awal aplikasi, menjalankan aplikasi dengan widget `MyApp`.
 
-Di dalam widget Homepage, saya menambahkan tiga tombol menggunakan ElevatedButton.icon.
-Masing-masing tombol memiliki ikon dan label teks sesuai checklist:
-Tombol pertama menggunakan ikon Icons.list dengan label "Lihat Daftar Produk".
-Tombol kedua menggunakan ikon Icons.add dengan label "Tambah Produk".
-Tombol ketiga menggunakan ikon Icons.logout dengan label "Logout".
+```dart
+class MyApp extends StatelessWidget { // Mendefinisikan kelas MyApp sebagai StatelessWidget
+  const MyApp({super.key}); // Konstruktor untuk MyApp, menggunakan key
+```
+Mendefinisikan kelas `MyApp` sebagai `StatelessWidget`, karena UI yang dibuat bersifat statis dan tidak berubah.
 
-• Mengimplementasikan warna-warna yang berbeda untuk setiap tombol
+```dart
+  @override
+  Widget build(BuildContext context) { // Metode untuk membangun UI MyApp
+    return MaterialApp( // Menggunakan MaterialApp sebagai root widget
+      debugShowCheckedModeBanner: false, // Menyembunyikan banner debug
+      title: "Toko Sepatu Muslim", // Menetapkan judul aplikasi
+```
+Metode `build` digunakan untuk membuat UI aplikasi. Menggunakan `MaterialApp` sebagai root widget dan menetapkan beberapa pengaturan, termasuk menonaktifkan banner debug dan menetapkan judul aplikasi.
 
-Saya menetapkan warna latar belakang berbeda untuk setiap tombol menggunakan ElevatedButton.styleFrom:
+```dart
+      theme: ThemeData( // Menetapkan tema aplikasi
+        colorScheme: ColorScheme.fromSeed( // Membuat skema warna berdasarkan seed color
+          seedColor: const Color.fromARGB(255, 0, 0, 0), // Warna seed adalah hitam
+        ),
+        useMaterial3: true, // Menggunakan Material 3
+        appBarTheme: const AppBarTheme( // Menetapkan tema untuk AppBar
+          titleTextStyle: TextStyle( // Menetapkan gaya teks untuk judul AppBar
+            color: Colors.white, // Warna teks putih
+            fontSize: 24, // Ukuran font 24
+            fontWeight: FontWeight.bold, // Menebalkan teks
+            fontFamily: 'Poppins', // Menggunakan font Poppins
+          ),
+          centerTitle: true, // Memusatkan judul di AppBar
+        ),
+      ),
+```
+Menetapkan `ThemeData` untuk mengatur tema aplikasi. `colorScheme` dibuat dari warna seed, `useMaterial3` diaktifkan untuk menggunakan Material Design 3, dan gaya `AppBar` disesuaikan dengan warna, ukuran, dan jenis font.
 
-Lihat Daftar Produk: Warna kuning (Color.fromARGB(255, 255, 183, 0)).
-Tambah Produk: Warna hijau (Color.fromARGB(255, 0, 255, 42)).
-Logout: Warna merah (Color.fromARGB(255, 255, 0, 0)).
+```dart
+      home: const Homepage(title: "Toko Sepatu Muslim"), // Menetapkan homepage sebagai widget Homepage
+    );
+  }
+}
+```
+Menetapkan `Homepage` sebagai halaman utama (`home`) aplikasi dan memberikan judul "Toko Sepatu Muslim".
 
-• Memunculkan Snackbar dengan pesan khusus untuk setiap tombol
-Saya membuat metode _showSnackBar di dalam kelas _HomepageState untuk menampilkan SnackBar dengan pesan yang sesuai ketika tombol ditekan. Ketika tombol ditekan, onPressed akan memanggil _showSnackBar() dengan pesan tertentu:
+```dart
+class Homepage extends StatefulWidget { // Mendefinisikan kelas Homepage sebagai StatefulWidget
+  const Homepage({super.key, required this.title}); // Konstruktor dengan judul yang diperlukan
 
-Lihat Daftar Produk: Menampilkan SnackBar dengan pesan "Anda telah berhasil menekan tombol Lihat Daftar Produk".
-Tambah Produk: Menampilkan SnackBar dengan pesan "Anda telah berhasil menekan tombol Tambah Produk".
-Logout: Menampilkan SnackBar dengan pesan "Anda telah berhasil menekan tombol Logout".
+  final String title; // Variabel untuk menyimpan judul
+```
+Mendefinisikan `Homepage` sebagai `StatefulWidget`, yang memungkinkan UI diperbarui ketika ada perubahan data. Menetapkan variabel `title` yang akan digunakan sebagai judul halaman.
+
+```dart
+  @override
+  State<Homepage> createState() => _HomepageState(); // Membuat state untuk Homepage
+}
+```
+Mendefinisikan kelas state `_HomepageState` untuk widget `Homepage`.
+
+```dart
+class _HomepageState extends State<Homepage> { // Mendefinisikan kelas state untuk Homepage
+  // Fungsi untuk menampilkan snackbar
+  void _showSnackBar(String message) { // Metode untuk menunjukkan snackbar dengan pesan
+    final snackBar = SnackBar( // Membuat snackbar dengan konten
+      content: Text(message), // Menetapkan konten snackbar
+      duration: const Duration(seconds: 3), // Durasi snackbar selama 3 detik
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar); // Menampilkan snackbar menggunakan ScaffoldMessenger
+  }
+```
+Mendefinisikan fungsi `_showSnackBar` untuk menampilkan `SnackBar` dengan pesan tertentu. `SnackBar` akan tampil selama 3 detik.
+
+```dart
+  @override
+  Widget build(BuildContext context) { // Metode untuk membangun UI Homepage
+    return Scaffold( // Menggunakan Scaffold sebagai kerangka untuk halaman
+      appBar: AppBar( // Membuat AppBar
+        backgroundColor: const Color.fromARGB(255, 9, 161, 164), // Warna latar belakang AppBar
+        title: Text(widget.title), // Menetapkan judul AppBar dari widget.title
+      ),
+```
+Metode `build` di `_HomepageState` membangun UI halaman `Homepage` dengan struktur `Scaffold`, termasuk `AppBar` dengan latar belakang berwarna hijau laut dan judul dari `widget.title`.
+
+```dart
+      body: Center( // Memusatkan konten di dalam tubuh halaman
+        child: Column( // Menggunakan Column untuk menyusun tombol secara vertikal
+          mainAxisAlignment: MainAxisAlignment.center, // Menyusun anak-anak di tengah kolom
+          children: <Widget>[ // Daftar widget anak
+```
+`body` halaman menggunakan `Center` untuk memusatkan konten, dan `Column` untuk menyusun widget secara vertikal dengan anak-anak di tengah.
+
+```dart
+            ElevatedButton.icon( // Membuat tombol dengan ikon
+              onPressed: () { // Ketika tombol ditekan
+                // Snackbar untuk tombol "Lihat Daftar Produk"
+                _showSnackBar('Anda telah berhasil menekan tombol Lihat Daftar Produk'); // Menampilkan snackbar
+              },
+              icon: const Icon(Icons.list), // Menetapkan ikon untuk tombol
+              label: const Text('Lihat Daftar Produk'), // Menetapkan label untuk tombol
+              style: ElevatedButton.styleFrom( // Mengatur gaya untuk tombol
+                backgroundColor: const Color.fromARGB(255, 255, 183, 0), // Warna latar belakang tombol
+                minimumSize: const Size(200, 50), // Ukuran minimum tombol
+              ),
+            ),
+```
+Membuat tombol pertama dengan ikon `Icons.list` dan teks "Lihat Daftar Produk". Ketika tombol ditekan, `SnackBar` akan muncul dengan pesan tertentu. Gaya tombol disesuaikan dengan warna latar belakang kuning dan ukuran minimum.
+
+```dart
+            const SizedBox(height: 16.0), // Spasi antara tombol
+```
+Menyisipkan `SizedBox` dengan tinggi 16 piksel sebagai spasi antara tombol.
+
+```dart
+            ElevatedButton.icon( // Tombol kedua
+              onPressed: () { // Ketika tombol ditekan
+                // Snackbar untuk tombol "Tambah Produk"
+                _showSnackBar('Anda telah berhasil menekan tombol Tambah Produk'); // Menampilkan snackbar
+              },
+              icon: const Icon(Icons.add), // Menetapkan ikon untuk tombol
+              label: const Text('Tambah Produk'), // Menetapkan label untuk tombol
+              style: ElevatedButton.styleFrom( // Mengatur gaya untuk tombol
+                backgroundColor: const Color.fromARGB(255, 0, 255, 42), // Warna latar belakang tombol
+                minimumSize: const Size(200, 50), // Ukuran minimum tombol
+              ),
+            ),
+```
+Membuat tombol kedua dengan ikon `Icons.add` dan teks "Tambah Produk". Ketika ditekan, `SnackBar` muncul dengan pesan "Tambah Produk". Warna tombol hijau dan ukuran minimum ditetapkan.
+
+```dart
+            const SizedBox(height: 16.0), // Spasi antara tombol
+```
+Spasi antar tombol kedua dan ketiga.
+
+```dart
+            ElevatedButton.icon( // Tombol ketiga
+              onPressed: () { // Ketika tombol ditekan
+                // Snackbar untuk tombol "Logout"
+                _showSnackBar('Anda telah berhasil menekan tombol Logout'); // Menampilkan snackbar
+              },
+              icon: const Icon(Icons.logout), // Menetapkan ikon untuk tombol
+              label: const Text('Logout'), // Menetapkan label untuk tombol
+              style: ElevatedButton.styleFrom( // Mengatur gaya untuk tombol
+                backgroundColor: const Color.fromARGB(255, 255, 0, 0), // Warna latar belakang tombol
+                minimumSize: const Size(200, 50), // Ukuran minimum tombol
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+Membuat tombol ketiga dengan ikon `Icons.logout` dan teks "Logout". `SnackBar` muncul dengan pesan "Logout" saat tombol ditekan. Warna tombol merah dan ukuran minimum ditetapkan.
+
+Kode ini untuk melengkapi UI aplikasi e-commerce dengan tiga tombol dan `SnackBar` interaktif untuk setiap tombol yang saya buat.
 
 
 
